@@ -41,7 +41,9 @@ We aim for slight overcommitment of CPU hyperthreads to avoid idling CPUs as muc
 
 The component of slinkwatch talking to systemd requires a specific godbus version. Please make sure to run
 
+```
 $ dep ensure
+```
 
 before building to make sure the correct version constraints apply.
 
