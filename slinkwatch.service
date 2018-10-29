@@ -1,0 +1,14 @@
+[Unit]
+Description=Suricata dymanic interface maintenance
+Documentation=https://github.com/DCSO/slinkwatch
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+SyslogIdentifier=slinkwatch
+EnvironmentFile=-/etc/default/slinkwatch
+ExecStart=/usr/bin/slinkwatch run $SLINKWATCH_ARGS
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+# Interfaces available for Suricata
+---
+ifaces:
+  eth0:
+    threadweight: 1
+    clusterid: 99
+  eth1:
+    threadweight: 10
+    clusterid: 98
+  eth2:
+    threadweight: 3
+    clusterid: 97
+  eth3:
+    threadweight: 3
+    clusterid: 96
