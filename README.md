@@ -1,4 +1,4 @@
-# slinkwatch
+# slinkwatch [![CircleCI](https://circleci.com/gh/DCSO/slinkwatch.svg?style=svg)](https://circleci.com/gh/DCSO/slinkwatch)
 
 slinkwatch is the *Suricata Link Watcher*, a tool to dynamically maintain `interface` entries in Suricata's configuration file, depending on what network interfaces are connected. It is meant to ease deployment of identical sensor installations at many heterogenous sites, allowing to make full use of the sensor resources in the light of varying monitoring volume.
 
