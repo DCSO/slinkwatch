@@ -37,6 +37,14 @@ and
 
 We aim for slight overcommitment of CPU hyperthreads to avoid idling CPUs as much as possible.
 
+## Installing dependencies via `dep`
+
+The component of slinkwatch talking to systemd requires a specific godbus version. Please make sure to run
+
+$ dep ensure
+
+before building to make sure the correct version constraints apply.
+
 ## Usage
 
 Define the interfaces that are available to assign in a YAML file, together with their weights:
