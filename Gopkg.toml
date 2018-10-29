@@ -1,0 +1,31 @@
+[[constraint]]
+  name = "github.com/coreos/go-systemd"
+  version = "17.0.0"
+
+[[constraint]]
+  name = "github.com/ryanuber/columnize"
+  version = "2.1.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/satta/ifplugo"
+
+[[constraint]]
+  name = "github.com/sirupsen/logrus"
+  version = "1.1.1"
+
+[[constraint]]
+  name = "github.com/spf13/cobra"
+  version = "0.0.3"
+
+[[constraint]]
+  name = "github.com/spf13/viper"
+  version = "1.2.1"
+
+[[constraint]]
+  name = "gopkg.in/yaml.v2"
+  version = "2.2.1"
+
+[prune]
+  go-tests = true
+  unused-packages = true

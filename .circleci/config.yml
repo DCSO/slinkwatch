@@ -17,6 +17,5 @@ jobs:
           name: Install apt dependencies
           command: 'sudo apt-get update && sudo apt-get -t stretch-backports install libdaemon-dev libsystemd-dev -y'
 
-      # specify any bash command here prefixed with `run: `
-      - run: go get -v -t ./...
+      - run: dep ensure
       - run: go test -v ./...
