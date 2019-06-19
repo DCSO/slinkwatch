@@ -109,6 +109,7 @@ Usage:
 
 Flags:
   -c, --config string            Configuration file (default "config.yaml")
+  -d, --delta-bytes uint         threshold of bytes to be exceeded on interface to be marked as up (default 100)
   -h, --help                     help for run
   -i, --interfaces string        Template file for interfaces (default "interfaces.tmpl")
   -p, --poll-interval duration   poll time for interface changes (default 5s)
