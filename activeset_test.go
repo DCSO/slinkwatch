@@ -1,6 +1,8 @@
 package slinkwatch
 
 import (
+	"io/ioutil"
+	"os"
 	"testing"
 	"text/template"
 )
@@ -31,9 +33,37 @@ func mkConfig() *Config {
 			"eth1": ConfIface{
 				ThreadWeight: 2,
 				ClusterID:    99,
+				ExtraOptions: map[string]string{
+					"foo": "bar",
+				},
 			},
 		},
 	}
+}
+
+func mkConfigFile(t *testing.T) *os.File {
+	cfgString := `# Interfaces available for Suricata
+---
+ifaces:
+  eth0:
+    threadweight: 2
+    clusterid: 99
+    extraopts:
+      cluster-type: cluster_qm
+      foo: barbaz
+      hasi: 234
+  eth1:
+    threadweight: 2
+    clusterid: 99
+    extraopts:
+      cluster-type: cluster_flow
+      captain: jack`
+	tempFile, err := ioutil.TempFile("", "slinkwatch")
+	if err != nil {
+		t.Fatal(err)
+	}
+	tempFile.WriteString(cfgString)
+	return tempFile
 }
 
 func mkEmptyConfig() *Config {
@@ -46,20 +76,11 @@ func mkTemplate(t *testing.T) *template.Template {
 af-packet:{{ range $iface, $vals := . }}
   - interface: {{ $iface }}
     threads: {{ $vals.Threads }}
-    cluster-id: {{ $vals.ClusterID }}
-    cluster-type: cluster_flow
-    defrag: yes
-    rollover: yes
-    use-mmap: yes
-    tpacket-v3: yes
-    use-emergency-flush: yes
-    buffer-size: 128000
+    cluster-id: {{ $vals.ClusterID }}{{ range $extrakey, $extraval := $vals.ExtraOptions }}
+    {{ $extrakey }}: {{ $extraval}}{{ end }}
 {{ else }}
   - interface: default
     threads: auto
-    use-mmap: yes
-    rollover: yes
-    tpacket-v3: yes
 {{ end }}`
 	tmplCompiled, err := template.New("test").Parse(tmpl)
 	if err != nil {
@@ -160,6 +181,27 @@ func TestActiveSetToYAML(t *testing.T) {
 func TestActiveSetEmptyToYAML(t *testing.T) {
 	cfg := mkConfig()
 	as := MakeActiveSet(cfg)
+
+	y, err := as.ToYAML(mkTemplate(t), cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(y) == 0 {
+		t.Fatal(err)
+	}
+}
+
+func TestActiveSetConfigFileToYAML(t *testing.T) {
+	cfg := &Config{}
+	as := MakeActiveSet(cfg)
+	tf := mkConfigFile(t)
+	defer os.Remove(tf.Name())
+	err := cfg.LoadConfig(tf.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	as.Add("eth0")
+	as.Add("eth1")
 
 	y, err := as.ToYAML(mkTemplate(t), cfg)
 	if err != nil {

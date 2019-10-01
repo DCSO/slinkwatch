@@ -27,8 +27,9 @@ import (
 
 // InterfaceInfo contains basic information about a specific interface entry.
 type InterfaceInfo struct {
-	Threads   int
-	ClusterID int
+	Threads      int
+	ClusterID    int
+	ExtraOptions map[string]string
 }
 
 // ActiveSet contains descriptions of the currently connected interfaces.
@@ -92,8 +93,9 @@ func (a *ActiveSet) ToYAML(tmpl *template.Template, config *Config) (string, err
 	}
 	for intf := range a.Ifaces {
 		a.Ifaces[intf] = InterfaceInfo{
-			Threads:   int(math.Ceil(float64(threads) * (float64(config.Ifaces[intf].ThreadWeight) / float64(totalweight)))),
-			ClusterID: config.Ifaces[intf].ClusterID,
+			Threads:      int(math.Ceil(float64(threads) * (float64(config.Ifaces[intf].ThreadWeight) / float64(totalweight)))),
+			ClusterID:    config.Ifaces[intf].ClusterID,
+			ExtraOptions: config.Ifaces[intf].ExtraOptions,
 		}
 	}
 	buf := new(bytes.Buffer)
