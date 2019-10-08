@@ -3,14 +3,15 @@
 af-packet:{{ range $iface, $vals := . }}
   - interface: {{ $iface }}
     threads: {{ $vals.Threads }}
-    cluster-id: {{ $vals.ClusterID }}
-    cluster-type: cluster_flow
+    cluster_type: cluster_flow
     defrag: yes
     rollover: yes
     use-mmap: yes
     tpacket-v3: yes
     use-emergency-flush: yes
     buffer-size: 128000
+    cluster-id: {{ $vals.ClusterID }}{{ range $extrakey, $extraval := $vals.ExtraOptions }}
+    {{ $extrakey }}: {{ $extraval}}{{ end }}
 {{ else }}
   - interface: default
     threads: auto

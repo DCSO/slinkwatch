@@ -27,6 +27,7 @@ import (
 type ConfIface struct {
 	ThreadWeight int
 	ClusterID    int
+	ExtraOptions map[string]string `yaml:"extraopts,omitempty"`
 }
 
 // Config represents basic configuration parsed from a file, such as interfaces
