@@ -69,7 +69,7 @@ func (rm *RestartManager) RestartSuricata() error {
 		return err
 	}
 	finishChan := make(chan string)
-	_, err = conn.RestartUnit(rm.ServiceName, "replace", finishChan)
+	_, err = conn.TryRestartUnit(rm.ServiceName, "replace", finishChan)
 	if err != nil {
 		return err
 	}
