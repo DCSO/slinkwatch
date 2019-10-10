@@ -57,6 +57,11 @@ func runMain(cmd *cobra.Command, args []string) {
 	log.Infof("Config file %s loaded successfully", configFile)
 	log.Infof("Watching interfaces %s", strings.Join(conf.GetWatchedInterfaces(), ","))
 
+	statusCmd, err := cmd.Flags().GetString("status-command")
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Infof("Suricata status command set to '%s'", statusCmd)
 	restartCmd, err := cmd.Flags().GetString("restart-command")
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +73,7 @@ func runMain(cmd *cobra.Command, args []string) {
 	}
 	log.Infof("Suricata service name command set to '%s'", restartCmd)
 
-	restartMan, err := slinkwatch.MakeRestartManager(restartCmd, serviceName)
+	restartMan, err := slinkwatch.MakeRestartManager(restartCmd, statusCmd, serviceName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -163,6 +168,7 @@ func init() {
 	runCmd.Flags().StringP("config", "c", "config.yaml", "Configuration file")
 	runCmd.Flags().StringP("interfaces", "i", "interfaces.tmpl", "Template file for interfaces")
 	runCmd.Flags().StringP("target-file", "t", "/etc/suricata/interfaces.yaml", "Target YAML file with interface information")
+	runCmd.Flags().StringP("status-command", "t", "/etc/init.d/suricata status", "Suricata status command")
 	runCmd.Flags().StringP("restart-command", "r", "/etc/init.d/suricata restart", "Suricata restart command")
 	runCmd.Flags().DurationP("poll-interval", "p", 5*time.Second, "poll time for interface changes")
 	runCmd.Flags().StringP("service-name", "s", "suricata.service", "systemd service name for Suricata service")

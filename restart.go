@@ -30,15 +30,17 @@ import (
 type RestartManager struct {
 	IsSystemd      bool
 	RestartCommand string
+	StatusCommand  string
 	ServiceName    string
 }
 
 // MakeRestartManager returns a new RestartManager with restart command and
 // service name preconfigured.
-func MakeRestartManager(restartCommand string, serviceName string) (*RestartManager, error) {
+func MakeRestartManager(restartCommand, statusCommand string, serviceName string) (*RestartManager, error) {
 	r := &RestartManager{
 		IsSystemd:      util.IsRunningSystemd(),
 		RestartCommand: restartCommand,
+		StatusCommand:  statusCommand,
 		ServiceName:    serviceName,
 	}
 	if !r.IsSystemd {
@@ -56,8 +58,14 @@ func MakeRestartManager(restartCommand string, serviceName string) (*RestartMana
 // method.
 func (rm *RestartManager) RestartSuricata() error {
 	if !rm.IsSystemd {
-		cmd := exec.Command("sh", "-c", rm.RestartCommand)
-		err := cmd.Run()
+		if rm.StatusCommand != "" {
+			err := exec.Command("sh", "-c", rm.StatusCommand).Run()
+			if err != nil {
+				log.Infof("restart: Suricata is not running, ignoring.")
+				return nil
+			}
+		}
+		err := exec.Command("sh", "-c", rm.RestartCommand).Run()
 		if err != nil {
 			return fmt.Errorf("Cannot restart Suricata: %v", err)
 		}
