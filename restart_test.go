@@ -19,14 +19,17 @@ package slinkwatch
 import "testing"
 
 func TestRestartManager(t *testing.T) {
-	rm, err := MakeRestartManager("foo", "bar")
+	rm, err := MakeRestartManager("foo", "bar", "baz")
 	if err != nil {
 		t.Fail()
 	}
-	if rm.ServiceName != "bar" {
+	if rm.ServiceName != "baz" {
 		t.Fail()
 	}
 	if rm.RestartCommand != "foo" {
+		t.Fail()
+	}
+	if rm.StatusCommand != "bar" {
 		t.Fail()
 	}
 }
